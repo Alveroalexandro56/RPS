@@ -14,4 +14,4 @@ loadstring(game:HttpGet('https://pastebin.com/raw/3Rnd9rHf'))()
 loadstring(game:HttpGet('https://raw.githubusercontent.com/Alveroalexandro56/RPS/refs/heads/main/Hihlightplayers.lua'))()
 
 -- Output a message after executing all scripts
-print("Cevor MM2>>>")
+print("Cevor MM2 IS ON TOP")
