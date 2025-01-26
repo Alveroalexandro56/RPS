@@ -10,8 +10,8 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Au0yX/Community/main/
 -- Load and execute fourth script
 loadstring(game:HttpGet('https://pastebin.com/raw/3Rnd9rHf'))()
 
--- Load and execute additional script (Orca)
-loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/richie0866/orca/master/public/latest.lua"))()
+-- Load and execute fifth script
+loadstring(game:HttpGet('https://raw.githubusercontent.com/Alveroalexandro56/RPS/refs/heads/main/Hihlightplayers.lua'))()
 
 -- Load and execute additional script (Orca)
 loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/richie0866/orca/master/public/latest.lua"))()
