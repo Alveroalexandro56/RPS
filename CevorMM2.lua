@@ -3,4 +3,3 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Alveroalexandro56/RPS
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Joystickplays/psychic-octo-invention/main/yarhm.lua", false))()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Au0yX/Community/main/XhubMM2"))()
 loadstring(game:HttpGet('https://pastebin.com/raw/3Rnd9rHf'))()
-print("Hi how are you thanks for using cevor mm2")
