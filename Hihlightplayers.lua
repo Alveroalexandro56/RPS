@@ -22,24 +22,8 @@ local function onCharacterAdded(character)
     end
 end
 
--- Connect to player events
-Players.PlayerAdded:Connect(function(player)
-    if player.Character then
-        createHighlight(player)
-    end
-    player.CharacterAdded:Connect(onCharacterAdded)
-end)
-
--- Handle already-existing players when the game starts
-for _, player in pairs(Players:GetPlayers()) do
-    if player.Character then
-        createHighlight(player)
-    end
-    player.CharacterAdded:Connect(onCharacterAdded)
-end
-
--- Refresh highlights every 1 second and print "Refreshed"
-while true do
+-- Function to refresh highlights for all players
+local function refreshHighlights()
     for _, player in pairs(Players:GetPlayers()) do
         if player.Character then
             -- Remove old highlights before creating new ones
@@ -51,6 +35,28 @@ while true do
             createHighlight(player)
         end
     end
+end
+
+-- Connect to player events
+Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(onCharacterAdded)
+    -- Create highlight for the player immediately if the character exists
+    if player.Character then
+        createHighlight(player)
+    end
+end)
+
+-- Handle already-existing players when the game starts
+for _, player in pairs(Players:GetPlayers()) do
+    if player.Character then
+        createHighlight(player)
+    end
+    player.CharacterAdded:Connect(onCharacterAdded)
+end
+
+-- Refresh highlights every 1 second
+while true do
+    refreshHighlights()
     print("Refreshed Cevor ESP")
     wait(1)
 end
