@@ -37,3 +37,20 @@ for _, player in pairs(Players:GetPlayers()) do
     end
     player.CharacterAdded:Connect(onCharacterAdded)
 end
+
+-- Refresh highlights every 1 second and print "Refreshed"
+while true do
+    for _, player in pairs(Players:GetPlayers()) do
+        if player.Character then
+            -- Remove old highlights before creating new ones
+            for _, child in pairs(player.Character:GetChildren()) do
+                if child:IsA("Highlight") then
+                    child:Destroy()
+                end
+            end
+            createHighlight(player)
+        end
+    end
+    print("Refreshed Cevor ESP")
+    wait(1)
+end
