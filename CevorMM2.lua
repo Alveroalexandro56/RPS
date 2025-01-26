@@ -13,8 +13,5 @@ loadstring(game:HttpGet('https://pastebin.com/raw/3Rnd9rHf'))()
 -- Load and execute fifth script
 loadstring(game:HttpGet('https://raw.githubusercontent.com/Alveroalexandro56/RPS/refs/heads/main/Hihlightplayers.lua'))()
 
--- Load and execute Orca hub script
-loadstring(game:HttpGet("https://raw.githubusercontent.com/richie0866/orca/master/public/latest.lua"))()
-
 -- Output a message after executing all scripts
 print("Cevor MM2>>>")
