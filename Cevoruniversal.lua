@@ -19,7 +19,7 @@ MainFrame.Draggable = true
 
 -- Title Label
 TitleLabel.Parent = MainFrame
-TitleLabel.Text = "Cevor Universal"
+TitleLabel.Text = "Picadillo"
 TitleLabel.Size = UDim2.new(1, 0, 0, 50)
 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TitleLabel.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
