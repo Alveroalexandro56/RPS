@@ -19,7 +19,7 @@ MainFrame.Draggable = true
 
 -- Title Label
 TitleLabel.Parent = MainFrame
-TitleLabel.Text = "Cevor universal"
+TitleLabel.Text = "Cevor Universal"
 TitleLabel.Size = UDim2.new(1, 0, 0, 50)
 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TitleLabel.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
@@ -169,6 +169,36 @@ createButton("Invisibility", function(state)
     for _, part in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
         if part:IsA("BasePart") or part:IsA("Decal") then
             part.Transparency = state and 1 or 0
+        end
+    end
+end)
+createButton("Noclip", function(state)
+    local character = game.Players.LocalPlayer.Character
+    local humanoid = character and character:FindFirstChild("Humanoid")
+    if humanoid then
+        humanoid.PlatformStand = state
+    end
+    for _, part in pairs(character:GetDescendants()) do
+        if part:IsA("BasePart") then
+            part.CanCollide = not state
+        end
+    end
+end)
+createButton("Infinite Jump", function(state)
+    local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
+    if humanoid then
+        humanoid.JumpPower = state and 200 or 50
+    end
+end)
+createButton("Kill All", function(state)
+    if state then
+        for _, player in pairs(game.Players:GetPlayers()) do
+            if player ~= game.Players.LocalPlayer and player.Character then
+                local humanoid = player.Character:FindFirstChild("Humanoid")
+                if humanoid then
+                    humanoid.Health = 0
+                end
+            end
         end
     end
 end)
