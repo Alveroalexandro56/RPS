@@ -14,7 +14,7 @@ ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 MainFrame.Size = UDim2.new(0, 400, 0, 600)
-MainFrame.Position = UDim2.new(0.5, -200, 0.65, -300) -- Lowered GUI position
+MainFrame.Position = UDim2.new(0.5, -200, 0.65, -300)
 MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 MainFrame.Active = true
 MainFrame.Draggable = true
@@ -54,7 +54,7 @@ end)
 ScrollingFrame.Parent = MainFrame
 ScrollingFrame.Size = UDim2.new(1, 0, 1, -50)
 ScrollingFrame.Position = UDim2.new(0, 0, 0, 50)
-ScrollingFrame.CanvasSize = UDim2.new(0, 0, 5, 0) -- Adjusted canvas size
+ScrollingFrame.CanvasSize = UDim2.new(0, 0, 5, 0)
 ScrollingFrame.ScrollBarThickness = 10
 ScrollingFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 
@@ -117,12 +117,77 @@ createButton("Invisibility", function(state)
 end)
 
 createButton("Fly", function(state)
-    local root = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-    if state and root then
-        root.Anchored = true
-        root.CFrame = root.CFrame + Vector3.new(0, 50, 0)
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local root = character:FindFirstChild("HumanoidRootPart")
+    local bodyVelocity
+
+    if state then
+        bodyVelocity = Instance.new("BodyVelocity")
+        bodyVelocity.MaxForce = Vector3.new(100000, 100000, 100000)
+        bodyVelocity.Velocity = Vector3.zero
+        bodyVelocity.P = 1250
+        bodyVelocity.Parent = root
+
+        game:GetService("RunService").RenderStepped:Connect(function()
+            if toggledFeatures["Fly"] and root then
+                local moveDirection = Vector3.zero
+                local userInputService = game:GetService("UserInputService")
+
+                if userInputService:IsKeyDown(Enum.KeyCode.W) then
+                    moveDirection = moveDirection + workspace.CurrentCamera.CFrame.LookVector
+                end
+                if userInputService:IsKeyDown(Enum.KeyCode.S) then
+                    moveDirection = moveDirection - workspace.CurrentCamera.CFrame.LookVector
+                end
+                if userInputService:IsKeyDown(Enum.KeyCode.A) then
+                    moveDirection = moveDirection - workspace.CurrentCamera.CFrame.RightVector
+                end
+                if userInputService:IsKeyDown(Enum.KeyCode.D) then
+                    moveDirection = moveDirection + workspace.CurrentCamera.CFrame.RightVector
+                end
+                if userInputService:IsKeyDown(Enum.KeyCode.Space) then
+                    moveDirection = moveDirection + Vector3.new(0, 1, 0)
+                end
+                if userInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
+                    moveDirection = moveDirection - Vector3.new(0, 1, 0)
+                end
+
+                bodyVelocity.Velocity = moveDirection * 50
+            end
+        end)
     else
-        root.Anchored = false
+        if bodyVelocity then
+            bodyVelocity:Destroy()
+        end
+    end
+end)
+
+createButton("Noclip", function(state)
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local noclipConnection
+
+    if state then
+        toggledFeatures["Noclip"] = true
+        noclipConnection = game:GetService("RunService").Stepped:Connect(function()
+            if not toggledFeatures["Noclip"] then
+                noclipConnection:Disconnect()
+            else
+                for _, part in pairs(character:GetDescendants()) do
+                    if part:IsA("BasePart") and part.CanCollide then
+                        part.CanCollide = false
+                    end
+                end
+            end
+        end)
+    else
+        toggledFeatures["Noclip"] = false
+        for _, part in pairs(character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = true
+            end
+        end
     end
 end)
 
@@ -130,41 +195,6 @@ createButton("Low Gravity", function(state)
     workspace.Gravity = state and 50 or 196.2
 end)
 
-createButton("Teleport Forward", function(state)
-    if state then
-        local root = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-        if root then
-            root.CFrame = root.CFrame + root.CFrame.LookVector * 50
-        end
-    end
-end)
-
-createButton("Spin", function(state)
-    while state and toggledFeatures["Spin"] do
-        local root = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-        if root then
-            root.CFrame = root.CFrame * CFrame.Angles(0, math.rad(15), 0)
-        end
-        wait(0.1)
-    end
-end)
-
-createButton("Heal", function(state)
-    local humanoid = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
-    if humanoid and state then
-        humanoid.Health = humanoid.MaxHealth
-    end
-end)
-
 createButton("Bright Mode", function(state)
     game.Lighting.Brightness = state and 5 or 1
-end)
-
-createButton("Teleport Up", function(state)
-    if state then
-        local root = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-        if root then
-            root.CFrame = root.CFrame + Vector3.new(0, 100, 0)
-        end
-    end
 end)
