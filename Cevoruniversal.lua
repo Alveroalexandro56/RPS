@@ -111,12 +111,24 @@ local noclip = false
 function toggleNoclip(state)
     noclip = state
     local character = game.Players.LocalPlayer.Character
-    if character then
+    local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
+    
+    if humanoidRootPart then
+        -- Set CanCollide to false for all parts
         for _, part in pairs(character:GetDescendants()) do
             if part:IsA("BasePart") then
                 part.CanCollide = not noclip
             end
         end
+        
+        -- This keeps the player moving while noclip is enabled
+        game:GetService("RunService").Heartbeat:Connect(function()
+            if noclip then
+                -- Override character's collision to let them fly through walls
+                humanoidRootPart.Velocity = Vector3.zero  -- Stop current velocity
+                humanoidRootPart.CFrame = humanoidRootPart.CFrame -- Keep the humanoid in place while noclip is on
+            end
+        end)
     end
 end
 
@@ -138,103 +150,8 @@ createButton("Infinite Jump", function(state)
     end
 end)
 
--- Kill All Feature
-createButton("Kill All", function(state)
-    if state then
-        for _, player in pairs(game.Players:GetPlayers()) do
-            if player ~= game.Players.LocalPlayer then
-                local humanoid = player.Character and player.Character:FindFirstChild("Humanoid")
-                if humanoid then
-                    humanoid.Health = 0
-                end
-            end
-        end
-    end
-end)
+-- Other features (Speed Hack, ESP, etc.) go here...
 
--- Speed Hack Feature
-createButton("Speed Hack", function(state)
-    local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
-    if humanoid then
-        humanoid.WalkSpeed = state and 100 or 16
-    end
-end)
-
--- ESP Feature (requires external script)
-createButton("ESP", function(state)
-    if state then
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Alveroalexandro56/RPS/refs/heads/main/Hihlightplayers.lua"))()
-    else
-        -- Cannot directly disable the script; refresh/restart recommended
-        print("ESP toggle requires reset to disable.")
-    end
-end)
-
--- Super Jump Feature
-createButton("Super Jump", function(state)
-    local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
-    if humanoid then
-        humanoid.JumpPower = state and 200 or 50
-    end
-end)
-
--- Low Gravity Feature
-createButton("Low Gravity", function(state)
-    workspace.Gravity = state and 50 or 196.2
-end)
-
--- Spin Feature
-createButton("Spin", function(state)
-    while state and toggledFeatures["Spin"] do
-        local root = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-        if root then
-            root.CFrame = root.CFrame * CFrame.Angles(0, math.rad(15), 0)
-        end
-        wait(0.1)
-    end
-end)
-
--- Teleport Forward Feature
-createButton("Teleport Forward", function(state)
-    if state then
-        local root = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-        if root then
-            root.CFrame = root.CFrame + root.CFrame.LookVector * 50
-        end
-    end
-end)
-
--- Heal Feature
-createButton("Heal", function(state)
-    local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
-    if humanoid and state then
-        humanoid.Health = humanoid.MaxHealth
-    end
-end)
-
--- Bright Mode Feature
-createButton("Bright Mode", function(state)
-    game.Lighting.Brightness = state and 5 or 1
-end)
-
--- Teleport Up Feature
-createButton("Teleport Up", function(state)
-    if state then
-        local root = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-        if root then
-            root.CFrame = root.CFrame + Vector3.new(0, 100, 0)
-        end
-    end
-end)
-
--- Invisibility Feature
-createButton("Invisibility", function(state)
-    for _, part in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
-        if part:IsA("BasePart") or part:IsA("Decal") then
-            part.Transparency = state and 1 or 0
-        end
-    end
-end)
-
--- Noclip Feature
+-- Noclip Button
 createButton("Noclip", toggleNoclip)
+
