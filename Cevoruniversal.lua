@@ -1,4 +1,4 @@
-local ScreenGui = Instance.new("ScreenGui")
+local ScreenGui = Instance.new("ScreenGui") 
 local MainFrame = Instance.new("Frame")
 local TitleLabel = Instance.new("TextLabel")
 local MinimizeButton = Instance.new("TextButton")
@@ -55,26 +55,6 @@ UIListLayout.Parent = ScrollingFrame
 UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 UIListLayout.Padding = UDim.new(0, 5)
 
--- Button Creator
-local toggledFeatures = {}
-function createButton(name, callback)
-    local Button = Instance.new("TextButton")
-    Button.Parent = ScrollingFrame
-    Button.Text = name
-    Button.Size = UDim2.new(1, 0, 0, 50)
-    Button.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Button.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-    Button.Font = Enum.Font.SourceSansBold
-    Button.TextScaled = true
-
-    toggledFeatures[name] = false
-    Button.MouseButton1Click:Connect(function()
-        toggledFeatures[name] = not toggledFeatures[name]
-        callback(toggledFeatures[name])
-        Button.BackgroundColor3 = toggledFeatures[name] and Color3.fromRGB(0, 200, 0) or Color3.fromRGB(100, 100, 100)
-    end)
-end
-
 -- Fly Feature
 local flying = false
 local flySpeed = 50
@@ -108,50 +88,122 @@ end
 
 -- Noclip Feature
 local noclip = false
+
 function toggleNoclip(state)
     noclip = state
     local character = game.Players.LocalPlayer.Character
-    local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
-    
-    if humanoidRootPart then
-        -- Set CanCollide to false for all parts
+    if character then
         for _, part in pairs(character:GetDescendants()) do
             if part:IsA("BasePart") then
                 part.CanCollide = not noclip
             end
         end
-        
-        -- Keep the player's velocity while noclip is enabled
-        game:GetService("RunService").Heartbeat:Connect(function()
-            if noclip then
-                -- Override character's collision to let them fly through walls
-                humanoidRootPart.Velocity = humanoidRootPart.Velocity  -- Keep velocity constant
-                humanoidRootPart.CFrame = humanoidRootPart.CFrame -- Keep the humanoid in place while noclip is on
+    end
+end
+
+-- Infinite Jump Feature
+local canJump = true
+
+function infiniteJumps(state)
+    canJump = state
+    local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
+    if humanoid then
+        humanoid.Jumping:Connect(function()
+            if canJump then
+                humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+                humanoid.PlatformStand = true
             end
         end)
     end
 end
 
--- Infinite Jump Feature
-createButton("Infinite Jump", function(state)
+-- Button Creator
+local toggledFeatures = {}
+function createButton(name, callback)
+    local Button = Instance.new("TextButton")
+    Button.Parent = ScrollingFrame
+    Button.Text = name
+    Button.Size = UDim2.new(1, 0, 0, 50)
+    Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Button.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+    Button.Font = Enum.Font.SourceSansBold
+    Button.TextScaled = true
+
+    toggledFeatures[name] = false
+    Button.MouseButton1Click:Connect(function()
+        toggledFeatures[name] = not toggledFeatures[name]
+        callback(toggledFeatures[name])
+        Button.BackgroundColor3 = toggledFeatures[name] and Color3.fromRGB(0, 200, 0) or Color3.fromRGB(100, 100, 100)
+    end)
+end
+
+-- Adding Features
+createButton("Fly", toggleFly)
+createButton("Speed Hack", function(state)
     local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
     if humanoid then
-        if state then
-            humanoid.JumpPower = 200 -- Set a high jump power for infinite jumps
-            humanoid:GetPropertyChangedSignal("FloorMaterial"):Connect(function()
-                if humanoid.FloorMaterial == Enum.Material.Air then
-                    humanoid:ChangeState(Enum.HumanoidStateType.Physics)
-                    humanoid:Move(Vector3.new(0, 50, 0)) -- Keep the player floating
-                end
-            end)
-        else
-            humanoid.JumpPower = 50 -- Reset to normal jump power when disabled
+        humanoid.WalkSpeed = state and 100 or 16
+    end
+end)
+createButton("ESP", function(state)
+    if state then
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Alveroalexandro56/RPS/refs/heads/main/Hihlightplayers.lua"))()
+    else
+        -- Cannot directly disable the script; refresh/restart recommended
+        print("ESP toggle requires reset to disable.")
+    end
+end)
+createButton("Super Jump", function(state)
+    local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
+    if humanoid then
+        humanoid.JumpPower = state and 200 or 50
+    end
+end)
+createButton("Low Gravity", function(state)
+    workspace.Gravity = state and 50 or 196.2
+end)
+createButton("Spin", function(state)
+    while state and toggledFeatures["Spin"] do
+        local root = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if root then
+            root.CFrame = root.CFrame * CFrame.Angles(0, math.rad(15), 0)
+        end
+        wait(0.1)
+    end
+end)
+createButton("Teleport Forward", function(state)
+    if state then
+        local root = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if root then
+            root.CFrame = root.CFrame + root.CFrame.LookVector * 50
+        end
+    end
+end)
+createButton("Heal", function(state)
+    local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
+    if humanoid and state then
+        humanoid.Health = humanoid.MaxHealth
+    end
+end)
+createButton("Bright Mode", function(state)
+    game.Lighting.Brightness = state and 5 or 1
+end)
+createButton("Teleport Up", function(state)
+    if state then
+        local root = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if root then
+            root.CFrame = root.CFrame + Vector3.new(0, 100, 0)
+        end
+    end
+end)
+createButton("Invisibility", function(state)
+    for _, part in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+        if part:IsA("BasePart") or part:IsA("Decal") then
+            part.Transparency = state and 1 or 0
         end
     end
 end)
 
--- Other features (Speed Hack, ESP, etc.) go here...
-
--- Noclip Button
+-- Adding Noclip and Infinite Jump buttons
 createButton("Noclip", toggleNoclip)
-createButton("Fly", toggleFly)
+createButton("Infinite Jump", infiniteJumps)
