@@ -121,11 +121,11 @@ function toggleNoclip(state)
             end
         end
         
-        -- This keeps the player moving while noclip is enabled
+        -- Keep the player's velocity while noclip is enabled
         game:GetService("RunService").Heartbeat:Connect(function()
             if noclip then
                 -- Override character's collision to let them fly through walls
-                humanoidRootPart.Velocity = Vector3.zero  -- Stop current velocity
+                humanoidRootPart.Velocity = humanoidRootPart.Velocity  -- Keep velocity constant
                 humanoidRootPart.CFrame = humanoidRootPart.CFrame -- Keep the humanoid in place while noclip is on
             end
         end)
@@ -154,4 +154,4 @@ end)
 
 -- Noclip Button
 createButton("Noclip", toggleNoclip)
-
+createButton("Fly", toggleFly)
