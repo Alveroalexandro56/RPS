@@ -76,37 +76,32 @@ function createButton(name, callback)
     end)
 end
 
--- Features: Fly
-local flying = false
-local bodyVelocity
+-- Features
 createButton("Fly", function(state)
-    flying = state
-    local player = game.Players.LocalPlayer
-    local character = player.Character or player.CharacterAdded:Wait()
-    local root = character:FindFirstChild("HumanoidRootPart")
-    if state and root then
+    local flying = state
+    local root = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    local bodyVelocity = nil
+    if flying and root then
         bodyVelocity = Instance.new("BodyVelocity", root)
         bodyVelocity.MaxForce = Vector3.new(100000, 100000, 100000)
-        bodyVelocity.Velocity = Vector3.zero
-        -- Fly Movement Buttons
-        createButton("Fly Up", function(upState)
-            bodyVelocity.Velocity = upState and Vector3.new(0, 50, 0) or Vector3.zero
-        end)
-        createButton("Fly Down", function(downState)
-            bodyVelocity.Velocity = downState and Vector3.new(0, -50, 0) or Vector3.zero
+        bodyVelocity.Velocity = Vector3.new(0, 50, 0)
+        game:GetService("UserInputService").InputBegan:Connect(function(input)
+            if input.KeyCode == Enum.KeyCode.Space then
+                bodyVelocity.Velocity = Vector3.new(0, 50, 0)
+            elseif input.KeyCode == Enum.KeyCode.LeftShift then
+                bodyVelocity.Velocity = Vector3.new(0, -50, 0)
+            end
         end)
     elseif bodyVelocity then
         bodyVelocity:Destroy()
     end
 end)
 
--- Features: Noclip
-local noclip = false
 createButton("Noclip", function(state)
-    noclip = state
-    local character = game.Players.LocalPlayer.Character or game.Players.LocalPlayer.CharacterAdded:Wait()
+    local noclip = state
+    local character = game.Players.LocalPlayer.Character
     while noclip do
-        for _, part in ipairs(character:GetDescendants()) do
+        for _, part in pairs(character:GetDescendants()) do
             if part:IsA("BasePart") then
                 part.CanCollide = false
             end
@@ -115,7 +110,6 @@ createButton("Noclip", function(state)
     end
 end)
 
--- Example: Add Other Features Below
 createButton("Speed Hack", function(state)
     local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
     if humanoid then
@@ -127,5 +121,62 @@ createButton("Super Jump", function(state)
     local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
     if humanoid then
         humanoid.JumpPower = state and 200 or 50
+    end
+end)
+
+createButton("ESP", function(state)
+    if state then
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Alveroalexandro56/RPS/refs/heads/main/Hihlightplayers.lua"))()
+    end
+end)
+
+createButton("Invisibility", function(state)
+    for _, part in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+        if part:IsA("BasePart") or part:IsA("Decal") then
+            part.Transparency = state and 1 or 0
+        end
+    end
+end)
+
+createButton("Low Gravity", function(state)
+    workspace.Gravity = state and 50 or 196.2
+end)
+
+createButton("Spin", function(state)
+    while state and toggledFeatures["Spin"] do
+        local root = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if root then
+            root.CFrame = root.CFrame * CFrame.Angles(0, math.rad(15), 0)
+        end
+        wait(0.1)
+    end
+end)
+
+createButton("Teleport Forward", function(state)
+    if state then
+        local root = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if root then
+            root.CFrame = root.CFrame + root.CFrame.LookVector * 50
+        end
+    end
+end)
+
+createButton("Heal", function(state)
+    local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
+    if humanoid and state then
+        humanoid.Health = humanoid.MaxHealth
+    end
+end)
+
+createButton("Bright Mode", function(state)
+    game.Lighting.Brightness = state and 5 or 1
+end)
+
+createButton("Teleport Up", function(state)
+    if state then
+        local root = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if root then
+            root.CFrame = root.CFrame + Vector3.new(0, 100, 0)
+        end
     end
 end)
