@@ -206,4 +206,4 @@ end)
 
 -- Adding Noclip and Infinite Jump buttons
 createButton("Noclip", toggleNoclip)
-createButton("PCLIP", infiniteJumps)
+createButton("Infinite jump", infiniteJumps)
