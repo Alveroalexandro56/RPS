@@ -31,7 +31,7 @@ local Window = Rayfield:CreateWindow({
       FileName = "true", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
       SaveKey = false, -- The user's key will be saved, but if you change the key, they will be unable to use your script
       GrabKeyFromSite = true, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
-      Key = {"https://pastebin.com/raw/06jeUSnL", "https://pastebin.com/raw/UEuXVrir"} -- List of keys that will be accepted by the system
+      Key = {"###################################################"} -- List of keys that will be accepted by the system
    }
 })
 
