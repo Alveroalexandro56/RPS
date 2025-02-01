@@ -362,34 +362,3 @@ local Button = Tab:CreateButton({
    loadstring(game:HttpGet("https://raw.githubusercontent.com/Au0yX/Community/main/XhubMM2"))()
    end,
 })
-
-local Button = Tab:CreateButton({
-   Name = "Invisibilty(Might not work)",
-   Callback = function()
-   local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-local camera = game.Workspace.CurrentCamera
-
--- Function to set character below the map
-local function moveUnderMap()
-    -- Set the position below the map (for example, -500 in Y-axis)
-    humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position.X, -500, humanoidRootPart.Position.Z)
-end
-
--- Function to keep camera at current hitbox position
-local function keepCameraAtHitbox()
-    while true do
-        -- Keep camera position aligned with the humanoid root part (hitbox)
-        camera.CFrame = CFrame.new(humanoidRootPart.Position + Vector3.new(0, 5, 0), humanoidRootPart.Position)
-        wait(0.1)
-    end
-end
-
--- Move character under the map
-moveUnderMap()
-
--- Start keeping the camera aligned with the hitbox
-keepCameraAtHitbox()
-
-})
