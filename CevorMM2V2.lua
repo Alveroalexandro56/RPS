@@ -1,6 +1,4 @@
 --Used rayfield link is https://docs.sirius.menu/rayfield
-if game.PlaceId == 142823291 then
-
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
