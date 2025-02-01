@@ -370,3 +370,23 @@ local Button = MainTab:CreateButton({
       end)
    end,
 })
+
+local Button = Tab:CreateButton({
+   Name = "Kill character",
+   Callback = function()
+   -- Kill Player Script
+local player = game.Players.LocalPlayer  -- Get the local player
+
+-- Function to kill the player
+local function killPlayer()
+    local character = player.Character
+    if character and character:FindFirstChild("Humanoid") then
+        character.Humanoid.Health = 0  -- Set health to 0, killing the player
+    end
+end
+
+-- Call the killPlayer function
+killPlayer()
+
+   end,
+})
