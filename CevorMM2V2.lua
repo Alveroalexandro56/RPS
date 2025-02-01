@@ -46,6 +46,141 @@ Rayfield:Notify({
 })
 
 -- Create the button in the main tab
+
+local KillAllButton = MainTab:CreateButton({
+   Name = "Kill All",
+   Callback = function()
+      -- Kill All script
+      local teleportedPlayers = {} -- Store players that have already been teleported to
+
+      local function killAll()
+         while true do
+            wait(2)  -- Wait for 2 seconds before teleporting
+
+            -- Get a list of all players
+            local players = {}
+            for _, player in pairs(game.Players:GetPlayers()) do
+                -- Make sure the player is not the local player and hasn't been teleported yet
+                if player ~= game.Players.LocalPlayer and not table.find(teleportedPlayers, player) then
+                    table.insert(players, player)
+                end
+            end
+
+            -- If there are players to teleport to, select a random one
+            if #players > 0 then
+                -- Get a random player
+                local randomPlayer = players[math.random(1, #players)]
+                local character = randomPlayer.Character
+                if character and character:FindFirstChild("HumanoidRootPart") then
+                    -- Teleport to the random player
+                    game.Players.LocalPlayer.Character:MoveTo(character.HumanoidRootPart.Position)
+
+                    -- Mark this player as teleported
+                    table.insert(teleportedPlayers, randomPlayer)
+                end
+            else
+                -- Stop the loop when all players have been teleported to
+                break
+            end
+         end
+      end
+
+      -- Start the kill all functionality
+      killAll()
+   end,
+})
+
+local Button = MainTab:CreateButton({
+   Name = "ESP",
+   Callback = function()
+   local function createESP(player)
+    -- Create ESP part
+    local espPart = Instance.new("BillboardGui")
+    espPart.Adornee = player.Character:WaitForChild("Head")
+    espPart.Parent = player.Character
+    espPart.Size = UDim2.new(0, 200, 0, 50)
+    espPart.StudsOffset = Vector3.new(0, 2, 0) -- Adjust the offset above the player's head
+
+    local label = Instance.new("TextLabel")
+    label.Parent = espPart
+    label.Size = UDim2.new(1, 0, 1, 0)
+    label.BackgroundTransparency = 1
+    label.TextStrokeTransparency = 0
+    label.TextScaled = true
+
+    -- Check the player's team and set the ESP color
+    if player.Team then
+        if player.Team.Name == "Red" then
+            label.TextColor3 = Color3.fromRGB(255, 0, 0)  -- Red team
+        elseif player.Team.Name == "Blue" then
+            label.TextColor3 = Color3.fromRGB(0, 0, 255)  -- Blue team
+        else
+            label.TextColor3 = Color3.fromRGB(255, 255, 0)  -- Default color (Yellow for non-team players)
+        end
+    else
+        label.TextColor3 = Color3.fromRGB(255, 255, 0)  -- Default color for players without a team
+    end
+
+    -- Display player name
+    label.Text = player.Name
+
+    -- Update ESP if the player moves
+    player.Character:WaitForChild("HumanoidRootPart").Changed:Connect(function()
+        espPart.Adornee = player.Character:WaitForChild("Head") -- Reattach if necessary
+    end)
+end
+
+-- Add ESP to all players
+for _, player in pairs(game.Players:GetPlayers()) do
+    if player.Character and player.Character:FindFirstChild("Head") then
+        createESP(player)
+    end
+end
+
+-- Add ESP to players who join
+game.Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function(character)
+        if character:FindFirstChild("Head") then
+            createESP(player)
+        end
+    end)
+end)
+
+   end,
+})
+
+local Tab = Window:CreateTab("Random Stuff", Nil) -- Title, Image
+
+local Button = Tab:CreateButton({
+   Name = "Infinite Yield",
+   Callback = function()
+   loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Yarhm",
+   Callback = function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/Joystickplays/psychic-octo-invention/main/yarhm.lua", true))()
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "XhubMM2",
+   Callback = function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/Au0yX/Community/main/XhubMM2"))()
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Invisibility",
+   Callback = function()
+   loadstring(game:HttpGet('https://pastebin.com/raw/3Rnd9rHf'))()
+   end,
+})
+
+local MainTab = Window:CreateTab("Local player", Nil) -- Title, Image
+
 local Button = MainTab:CreateButton({
    Name = "Fly Gui",
    Callback = function()
@@ -233,137 +368,5 @@ local Button = MainTab:CreateButton({
 
          start()
       end)
-   end,
-})
-
-local KillAllButton = MainTab:CreateButton({
-   Name = "Kill All",
-   Callback = function()
-      -- Kill All script
-      local teleportedPlayers = {} -- Store players that have already been teleported to
-
-      local function killAll()
-         while true do
-            wait(2)  -- Wait for 2 seconds before teleporting
-
-            -- Get a list of all players
-            local players = {}
-            for _, player in pairs(game.Players:GetPlayers()) do
-                -- Make sure the player is not the local player and hasn't been teleported yet
-                if player ~= game.Players.LocalPlayer and not table.find(teleportedPlayers, player) then
-                    table.insert(players, player)
-                end
-            end
-
-            -- If there are players to teleport to, select a random one
-            if #players > 0 then
-                -- Get a random player
-                local randomPlayer = players[math.random(1, #players)]
-                local character = randomPlayer.Character
-                if character and character:FindFirstChild("HumanoidRootPart") then
-                    -- Teleport to the random player
-                    game.Players.LocalPlayer.Character:MoveTo(character.HumanoidRootPart.Position)
-
-                    -- Mark this player as teleported
-                    table.insert(teleportedPlayers, randomPlayer)
-                end
-            else
-                -- Stop the loop when all players have been teleported to
-                break
-            end
-         end
-      end
-
-      -- Start the kill all functionality
-      killAll()
-   end,
-})
-
-local Button = MainTab:CreateButton({
-   Name = "ESP",
-   Callback = function()
-   local function createESP(player)
-    -- Create ESP part
-    local espPart = Instance.new("BillboardGui")
-    espPart.Adornee = player.Character:WaitForChild("Head")
-    espPart.Parent = player.Character
-    espPart.Size = UDim2.new(0, 200, 0, 50)
-    espPart.StudsOffset = Vector3.new(0, 2, 0) -- Adjust the offset above the player's head
-
-    local label = Instance.new("TextLabel")
-    label.Parent = espPart
-    label.Size = UDim2.new(1, 0, 1, 0)
-    label.BackgroundTransparency = 1
-    label.TextStrokeTransparency = 0
-    label.TextScaled = true
-
-    -- Check the player's team and set the ESP color
-    if player.Team then
-        if player.Team.Name == "Red" then
-            label.TextColor3 = Color3.fromRGB(255, 0, 0)  -- Red team
-        elseif player.Team.Name == "Blue" then
-            label.TextColor3 = Color3.fromRGB(0, 0, 255)  -- Blue team
-        else
-            label.TextColor3 = Color3.fromRGB(255, 255, 0)  -- Default color (Yellow for non-team players)
-        end
-    else
-        label.TextColor3 = Color3.fromRGB(255, 255, 0)  -- Default color for players without a team
-    end
-
-    -- Display player name
-    label.Text = player.Name
-
-    -- Update ESP if the player moves
-    player.Character:WaitForChild("HumanoidRootPart").Changed:Connect(function()
-        espPart.Adornee = player.Character:WaitForChild("Head") -- Reattach if necessary
-    end)
-end
-
--- Add ESP to all players
-for _, player in pairs(game.Players:GetPlayers()) do
-    if player.Character and player.Character:FindFirstChild("Head") then
-        createESP(player)
-    end
-end
-
--- Add ESP to players who join
-game.Players.PlayerAdded:Connect(function(player)
-    player.CharacterAdded:Connect(function(character)
-        if character:FindFirstChild("Head") then
-            createESP(player)
-        end
-    end)
-end)
-
-   end,
-})
-
-local Tab = Window:CreateTab("Random Stuff", Nil) -- Title, Image
-
-local Button = Tab:CreateButton({
-   Name = "Infinite Yield",
-   Callback = function()
-   loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
-   end,
-})
-
-local Button = Tab:CreateButton({
-   Name = "Yarhm",
-   Callback = function()
-   loadstring(game:HttpGet("https://raw.githubusercontent.com/Joystickplays/psychic-octo-invention/main/yarhm.lua", true))()
-   end,
-})
-
-local Button = Tab:CreateButton({
-   Name = "XhubMM2",
-   Callback = function()
-   loadstring(game:HttpGet("https://raw.githubusercontent.com/Au0yX/Community/main/XhubMM2"))()
-   end,
-})
-
-local Button = Tab:CreateButton({
-   Name = "Invisibility",
-   Callback = function()
-   loadstring(game:HttpGet('https://pastebin.com/raw/3Rnd9rHf'))()
    end,
 })
