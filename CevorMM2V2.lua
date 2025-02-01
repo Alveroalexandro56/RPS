@@ -371,7 +371,7 @@ local Button = MainTab:CreateButton({
    end,
 })
 
-local Button = Tab:CreateButton({
+local Button = MainTab:CreateButton({
    Name = "Kill character",
    Callback = function()
    -- Kill Player Script
