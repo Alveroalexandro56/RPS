@@ -1,4 +1,6 @@
 --Used rayfield link is https://docs.sirius.menu/rayfield
+if game.PlaceId == 142823291 then
+
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
@@ -367,10 +369,7 @@ local Button = Tab:CreateButton({
    local player = game.Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-local humanoid = character:WaitForChild("Humanoid")
-
--- Disable collisions so we can teleport
-humanoidRootPart.CanCollide = false
+local camera = game.Workspace.CurrentCamera
 
 -- Function to set character below the map
 local function moveUnderMap()
@@ -378,15 +377,19 @@ local function moveUnderMap()
     humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position.X, -500, humanoidRootPart.Position.Z)
 end
 
--- Move the character under the map
-moveUnderMap()
-
--- Keep the hitbox at the same location
-while true do
-    -- Make sure the humanoid's root part stays in place
-    humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position.X, -500, humanoidRootPart.Position.Z)
-    wait(0.1)  -- Keep updating the position
+-- Function to keep camera at current hitbox position
+local function keepCameraAtHitbox()
+    while true do
+        -- Keep camera position aligned with the humanoid root part (hitbox)
+        camera.CFrame = CFrame.new(humanoidRootPart.Position + Vector3.new(0, 5, 0), humanoidRootPart.Position)
+        wait(0.1)
+    end
 end
 
-   end,
+-- Move character under the map
+moveUnderMap()
+
+-- Start keeping the camera aligned with the hitbox
+keepCameraAtHitbox()
+
 })
