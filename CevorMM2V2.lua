@@ -342,4 +342,53 @@ end)
 
 local Tab = Window:CreateTab("Random Stuff", Nil) -- Title, Image
 
-local Paragraph = MainTab:CreateParagraph({Title = "Coming Soon", Content = "Coming Soon"})
+local Button = Tab:CreateButton({
+   Name = "Infinite Yield",
+   Callback = function()
+   loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Yarhm",
+   Callback = function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/Joystickplays/psychic-octo-invention/main/yarhm.lua", true))()
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "XhubMM2",
+   Callback = function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/Au0yX/Community/main/XhubMM2"))()
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Invisibilty(Might not work)",
+   Callback = function()
+   local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local humanoid = character:WaitForChild("Humanoid")
+
+-- Disable collisions so we can teleport
+humanoidRootPart.CanCollide = false
+
+-- Function to set character below the map
+local function moveUnderMap()
+    -- Set the position below the map (for example, -500 in Y-axis)
+    humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position.X, -500, humanoidRootPart.Position.Z)
+end
+
+-- Move the character under the map
+moveUnderMap()
+
+-- Keep the hitbox at the same location
+while true do
+    -- Make sure the humanoid's root part stays in place
+    humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position.X, -500, humanoidRootPart.Position.Z)
+    wait(0.1)  -- Keep updating the position
+end
+
+   end,
+})
